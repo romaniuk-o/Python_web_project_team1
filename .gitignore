@@ -133,3 +133,6 @@ dmypy.json
 
 # PyCharm folder
 .idea/
+
+config/__pycache__/*.pyc
+src/__pycache__/*.pyc
