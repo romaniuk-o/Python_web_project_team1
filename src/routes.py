@@ -15,6 +15,10 @@ from src.libs.validation_schemas import NewContactSchema
 def healthcheck():
     return 'I am a finaly project, team 1'
 
+# @app.route('/healthcheck')
+# def healthcheck():
+#     return 'I am a finaly project, team 1'
+
 
 @app.route('/', strict_slashes=False)
 def index():
