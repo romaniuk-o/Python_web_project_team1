@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Address book</h1>
+    <nav>
+        <ul>
+            <li><a href="/" role="button"> Go back to the main page </a></li>
+        </ul>
+    </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% for c in contacts %}
+    <h3>Contact ID: <small> {{ c.id }} </small></h3>
+    <h3>Name: <small> {{ c.user_name }} </small></h3>
+    <h3>Phone(s): </h3>
+    {% for p in phones%}
+    {% if p.contact_id == c.id%}
+    <h3><small> {{ p.phone }} </small></h3>
+    {% endif %}
+    {% endfor %}
+    <h3>Email: <small> {{ c.email }} </small></h3>
+    <h3>Birthday: <small> {{ c.birthday }} </small></h3>
+    <h3>Address: <small> {{ c.address }} </small></h3>
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+                <a class="btn btn-sm btn-outline-secondary" href="/show_address_book/edit/{{c.id}}"
+                > Edit </a
+                >
+                <form action="/show_address_book/delete/{{c.id}}" method="GET">
+                    <button class="btn btn-sm btn-outline-secondary">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

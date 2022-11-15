@@ -72,7 +72,7 @@ def edit_address_book(c_id):
         email = request.form.get('email')
         contact_methods.edit_contact(c_id, name, birthday, address, email)
         flash('Changed successfully!')
-        return redirect(url_for('result_address_book'))
+        return redirect(url_for('show_address_book'))
     return render_template('pages/edit_address_book.html', contact=contact, phones=phones)
 
 
@@ -80,7 +80,7 @@ def edit_address_book(c_id):
 def find_address_book():
     if request.method == 'POST':
         symbol = request.form.get('symbol')
-        contact = contact_methods.find_notate(symbol)
+        contact = contact_methods.get_contact(symbol)
         return render_template('pages/result_address_book.html', contact=contact)
     return render_template('pages/find_address_book.html')
 
