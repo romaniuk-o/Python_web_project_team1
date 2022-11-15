@@ -80,7 +80,7 @@ def edit_address_book(c_id):
 def find_address_book():
     if request.method == 'POST':
         symbol = request.form.get('symbol')
-        contact = contact_methods.get_contact(symbol)
+        contact = contact_methods.find_contact(symbol)
         return render_template('pages/result_address_book.html', contact=contact)
     return render_template('pages/find_address_book.html')
 

@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from src import db
 from src import models
 from src.libs.validation_file import phone_valid
@@ -45,6 +46,16 @@ def edit_contact(c_id, name, birthday, address, email):
     c.address = address
     c.email = email
     db.session.commit()
+
+
+def find_contact(symbol):
+    contacts = db.session.query(models.Contact).filter(or_(
+            models.Contact.id.ilike(symbol),
+            models.Contact.user_name.ilike(symbol),
+            models.Contact.birthday.ilike(symbol),
+            models.Contact.email.ilike(symbol),
+            models.Contact.address.ilike(symbol)))
+    return contacts
 
 
 def add_new_phone(contact_id, phone):

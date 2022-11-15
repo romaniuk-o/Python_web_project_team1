@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container">
+      <h1>RESULT</h1>
+      <nav>
+        <ul>
+          <li><a href="/find_address_book" role="button"> Go back to the find page </a></li>
+        </ul>
+      </nav>
+        {% if contacts %}
+        {% for c in contacts %}
+        <h3>Contact ID:   <small> {{ c.id }} </small></h3>
+        <h3>Name:      <small> {{ c.user_name }} </small></h3>
+        <h3>Phone(s):      </h3>
+            {% for p in phones%}
+              {% if p.contact_id == c.id%}
+                <h3> <small> {{ p.phone }} </small></h3>
+              {% endif %}
+            {% endfor %}
+        <h3>Email:      <small> {{ c.email }} </small></h3>
+        <h3>Birthday:      <small> {{ c.birthday }} </small></h3>
+        <h3>Address:      <small> {{ c.address }} </small></h3>
+        {% endfor %}
+        {% else %}
+          <h3>Nothing find</h3>
+        {% endif %}
+    </div>
+{% endblock %}
