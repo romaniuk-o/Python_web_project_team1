@@ -32,18 +32,41 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                  <a class="nav-link" href="/">Home</a></li>
+                {% if auth %}
                 <li class="nav-item">
-                 <a class="nav-link" href="/logout">Sign out</a>
+                 <a class="nav-link" href="/sign_out">Sign out</a>
                 </li>
+                <li class="nav-item">
+
+                 <h4 class="user_name" >{{user_name}}
+                 <img class="mb-2" src="{{ url_for('static', filename='user.png') }}" alt="" width="35" height="35">
+                     </h4>
+                </li>
+                {% else %}
                 <li class="nav-item">
                  <a class="nav-link" href="/registration">Registration</a>
                 </li>
                 <li class="nav-item">
-                 <a class="nav-link" href="/login">Sign in</a>
+                 <a class="nav-link" href="/sign_in">Sign in</a>
                 </li>
+
+                {% endif %}
             </ul>
         </div>
+
     </nav>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-bottom">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+      </nav>
     <main class="template" role="main">
       {% block content %}
       {% endblock %}

@@ -1,4 +1,7 @@
-body ,
+body {
+
+
+},
 
 
 .main-conteiner {
@@ -10,7 +13,7 @@ body ,
   box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.1);
 }
 html {
-  padding: 10rem 50px 50px;
+  padding: 10px 50px 50px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   display: flex;
   height: 100%;
@@ -19,16 +22,39 @@ html {
   justify-content: center;
   align-content: flex-start;
 }
+.container_reg{
+  position: relative;
+  top: 50px;
+  left: 300px;
+  display: flex;
+}
+
+.container_sign{
+  position: relative;
+  top: 0px;
+  left: 300px;
+  display: flex;
+}
+
+user_name {
+  color: #ffffff;
+}
 
 a {
   color: #00B7FF;
 }
 
 h1 {
-  color: #0DCA1B;
+  color: #696969;
 }
-
+h4 {
+  color: #ffffff;
+}
 .template {
+  position: relative;
+  top: 50px;
+  left: 200px;
+  display: flex;
   padding: 3rem 1.5rem;
   text-align: center;
   height: 100%;
@@ -37,10 +63,18 @@ h1 {
 
 /*side-bar-section  */
 .side-bar-section {
-  background: #696969;
-  width: 370px;
-  padding: 80px 0;
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #696969;
+    overflow-x: hidden;
+    padding-top: 80px;
 }
+
+
 .Tech-Skills-section {
   margin: 50px 0 0 40px;
 }

@@ -1,3 +1,4 @@
+from _sqlite3 import IntegrityError
 from flask import render_template, request, flash, redirect, url_for, session, make_response
 from werkzeug.utils import secure_filename
 import pathlib
@@ -7,23 +8,24 @@ from marshmallow import ValidationError
 
 from . import app
 from src.libs.validation_file import phone_valid
-from src.repository import contact_methods
+from src.repository import contact_methods, regist
 from src.libs.validation_schemas import NewContactSchema
+from src.libs.validation_schemas import RegistrationSchema, LoginSchema
 
 
 @app.route('/healthcheck')
 def healthcheck():
-    return 'I am a finaly project, team 1'
-
-# @app.route('/healthcheck')
-# def healthcheck():
-#     return 'I am a finaly project, team 1'
+    return 'I am a final project, team 1'
 
 
 @app.route('/', strict_slashes=False)
 def index():
     auth = True if 'username' in session else False
-    return render_template('pages/index.html', title='Final project, TEAM 1', auth=auth)
+    if auth:
+        user_name = session['username']['username']
+    else:
+        user_name = ''
+    return render_template('pages/index.html', title='Final project, TEAM 1', auth=auth, user_name=user_name)
 
 
 @app.route('/new_contact', methods=['GET', 'POST'], strict_slashes=False)
@@ -39,7 +41,7 @@ def new_contact():
         address = request.form.get('address')
         email = request.form.get('email')
         if phone_valid(phone) is None:
-            flash(f'Phone number is incorect\n'
+            flash(f'Phone number is incorrect\n'
                   f'Phone number must be 12 digits, and start with 380')
             return render_template('pages/new_contact.html')
         contact_methods.add_new_contact(name, phone_valid(phone), birthday, address, email)
@@ -107,6 +109,72 @@ def add_new_phone():
         flash('added successfully')
     return render_template('pages/add_new_phone.html')
 
+
+@app.route('/registration', methods=['GET', 'POST'], strict_slashes=False)
+def registration():
+    auth = True if 'username' in session else False
+    if request.method == 'POST':
+        try:
+            RegistrationSchema().load(request.form)
+        except ValidationError as err:
+            return render_template('pages/registration.html', messages=err.messages)
+        except IntegrityError as err:
+            return render_template('pages/registration.html', messages=err)
+        email = request.form.get('email')
+        password = request.form.get('password')
+        nick = request.form.get('nickname')
+        print(email, password, nick)
+        user = regist.create_user(email, password, nick)
+        print(user)
+        return redirect(url_for('sign_in'))
+    if auth:
+        return redirect(url_for('index'))
+    else:
+        return render_template('pages/registration.html')
+
+
+@app.route('/sign_in', methods=['GET', 'POST'], strict_slashes=False)
+def sign_in():
+    auth = True if 'username' in session else False
+    if request.method == 'POST':
+        try:
+            LoginSchema().load(request.form)
+        except ValidationError as err:
+            return render_template('pages/sign_in.html', messages=err.messages)
+
+        email = request.form.get('email')
+        password = request.form.get('password')
+        remember = True if request.form.get('remember') == 'on' else False
+
+        user = regist.login(email, password)
+        if user is None:
+            return redirect(url_for('sign_in'))
+        session['username'] = {"username": user.username, "id": user.id}
+        response = make_response(redirect(url_for('index')))
+        if remember:
+            # Треба створить token, та покласти його в cookie та БД
+            token = str(uuid.uuid4())
+            expire_data = datetime.now() + timedelta(days=60)
+            response.set_cookie('username', token, expires=expire_data)
+            regist.set_token(user, token)
+
+        return response
+    if auth:
+        return redirect(url_for('index'))
+    else:
+        return render_template('pages/sign_in.html')
+
+
+@app.route('/sign_out', strict_slashes=False)
+def logout():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(url_for('index'))               #request.url)  # Відправляє туди звідки він прийшов
+    session.pop('username')
+    response = make_response(redirect(url_for('index')))
+    response.set_cookie('username', '', expires=-1)
+
+    return response
 
 
 
