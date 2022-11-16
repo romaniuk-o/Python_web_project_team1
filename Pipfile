@@ -12,6 +12,9 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 python-dotenv = "*"
 marshmallow = "*"
+bcrypt = "*"
+dotenv-python = "*"
+dotenv-cli = "*"
 
 [dev-packages]
 
