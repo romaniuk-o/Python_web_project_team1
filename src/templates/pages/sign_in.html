@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="container_sign">
+  <form action="/sign_in" method="post">
+    <img class="mb-4" src="{{ url_for('static', filename='favicon.ico') }}" alt="" width="70" height="50">
+    <h1 class="h3 mb-3 fw-normal">Pleas Sign in</h1>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger">{{message}}: {{messages[message]}}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="form-floating">
+      <input type="text" class="form-control" name="email" placeholder="name@example.com">
+      <label >Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" name="password" placeholder="password">
+      <label >Password</label>
+    </div>
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me" name="remember"> Remember me
+      </label>
+    </div>
+    <button class="w-100 btn btn-lg btn-dark" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">© 2022–2022</p>
+  </form>
+</main>
+
+{% endblock %}
