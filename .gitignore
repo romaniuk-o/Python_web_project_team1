@@ -1,4 +1,6 @@
 .env
 data
 migrations
+*__pycache__
 .idea
+*.xml
