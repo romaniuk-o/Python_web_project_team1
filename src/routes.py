@@ -11,9 +11,13 @@ from src.repository import contact_methods
 from src.libs.validation_schemas import NewContactSchema
 
 
+from src import db
+from .models import Note, NoteTag, User
+
+
 @app.route('/healthcheck')
 def healthcheck():
-    return 'I am a finaly project, team 1'
+    return 'I am a finally project, team 1'
 
 
 @app.route('/', strict_slashes=False)
@@ -104,8 +108,103 @@ def add_new_phone():
     return render_template('pages/add_new_phone.html')
 
 
+@app.route('/notes', methods=['GET', 'POST'], strict_slashes=False)
+def notes_main():
+    tags = db.session.query(NoteTag).filter(NoteTag.user_id == 1).all()  # for testing
+    # notes = []
+    # if 'username' in session:
+    #     notes = db.session.query(Note).filter(User.id == session['username']['id']).all()
+    notes = db.session.query(Note).filter(Note.user_id == 1).all()  # for testing
+
+    if request.method == 'GET':
+        return render_template('pages/notes_main.html', notes=notes, tags=tags)
+    if request.method == 'POST':
+        filter_tag = request.form.get('filter_tag')
+        search_text = request.form.get('search_text')
+        # clear_filter = request.form.get('clear_filter') does not work
+
+        # search_by_tag = request.form.get('by_tag') #add later
+        if filter_tag:
+            notes_by_tag = []
+            for note in notes:
+                if int(filter_tag) in [t.id for t in note.note_tags]:
+                    notes_by_tag.append(note)
+            return render_template('pages/notes_main.html', notes=notes_by_tag, tags=tags)
+        # if search_text: #not working
+        #     notes_by_search = []
+        #     for note in notes:
+        #         if [t.tag_name for t in note.note_tags if 'test' in t.tag_name] or (search_text in note.note_text):
+        #             print([t.tag_name for t in note.note_tags if search_text in t.tag_name], [t.tag_name for t in note.note_tags if search_text in t.tag_name] is True)
+        #             notes_by_search.append(note)
+        #     return render_template('pages/notes_main.html', notes=notes_by_search, tags=tags)
+            #     tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
 
 
+
+@app.route('/notes/tags', methods=['GET', 'POST'], strict_slashes=False)
+def add_tags():
+    auth = True if 'username' in session else False
+    # if not auth:
+    #     return redirect(request.url)
+    if request.method == 'POST':
+        tag_name = request.form.get('tag_name')
+        #add condition to check if the tag is already in the database for this user
+        # tag = NoteTag(tag_name=tag_name, user_id=session['username']['id'])
+        tag = NoteTag(tag_name=tag_name, user_id=1) #for testing
+        db.session.add(tag)
+        db.session.commit()
+        flash('Tag saved!')
+        return redirect(url_for('add_tags'))
+    # tags = []
+    # if 'username' in session:
+    #     tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
+    tags = db.session.query(NoteTag).filter(NoteTag.user_id == 1).all()  # for testing
+    return render_template('pages/tags.html', tags=tags)
+
+
+@app.route('/notes/add', methods=['GET', 'POST'], strict_slashes=False)
+def add_notes():
+    auth = True if 'username' in session else False
+    # if not auth:
+    #     return redirect(request.url)
+
+    # tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
+
+    if request.method == 'POST':
+        note_tags = request.form.getlist('tags')
+        note_text = request.form.get('note_text')
+        if len(note_text) == 0:
+            flash('Please, enter note')
+            return redirect(request.url)
+        # note = Note(note_text=note_text, user_id=session['username']['id'])
+        # choice_tags = db.session.query(NoteTag).filter(NoteTag.id.in_(note_tags), User.id == session['username']['id']).all()
+        note = Note(note_text=note_text, user_id=1) #for testing
+        choice_tags = db.session.query(NoteTag).filter(NoteTag.id.in_(note_tags), NoteTag.user_id == 1).all() #for testing
+        for tag in choice_tags:
+            note.note_tags.append(tag)
+        db.session.add(note)
+        db.session.commit()
+        flash('Note saved!')
+        return redirect(url_for('notes_main'))
+    # tags = []
+    # if 'username' in session:
+    #     tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
+    tags = db.session.query(NoteTag).filter(NoteTag.user_id == 1).all() #for testing
+    return render_template('pages/notes_add.html', tags=tags)
+
+
+
+@app.route('/notes/delete/<note_id>', methods=['POST'], strict_slashes=False)
+def note_delete(note_id):
+    auth = True if 'username' in session else False
+    # if not auth:
+    #     return redirect(request.url)
+    if request.method == 'POST':
+        # db.session.query(Note).filter(Note.user_id == session['username']['id'], Note.id == note_id).delete()
+        db.session.query(Note).filter(Note.user_id == 1, Note.id == note_id).delete()
+        db.session.commit()
+        flash('Note deleted!')
+    return redirect(url_for('notes_main'))
 
 
 
