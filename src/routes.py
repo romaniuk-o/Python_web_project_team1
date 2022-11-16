@@ -13,9 +13,14 @@ from src.libs.validation_schemas import NewContactSchema
 from src.libs.validation_schemas import RegistrationSchema, LoginSchema
 
 
+from src import db
+from .models import Note, NoteTag, User
+
+
 @app.route('/healthcheck')
 def healthcheck():
-    return 'I am a final project, team 1'
+    return 'I am a finally project, team 1'
+
 
 
 @app.route('/', strict_slashes=False)
@@ -117,7 +122,6 @@ def notes_main():
     # if 'username' in session:
     #     notes = db.session.query(Note).filter(User.id == session['username']['id']).all()
     notes = db.session.query(Note).filter(Note.user_id == 1).all()  # for testing
-
     if request.method == 'GET':
         return render_template('pages/notes_main.html', notes=notes, tags=tags)
     if request.method == 'POST':
@@ -274,35 +278,5 @@ def logout():
     response.set_cookie('username', '', expires=-1)
 
     return response
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
