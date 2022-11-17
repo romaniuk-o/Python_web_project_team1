@@ -98,6 +98,10 @@ def find_address_book():
 
 @app.route('/add_new_phone', methods=['GET', 'POST'], strict_slashes=False)
 def add_new_phone():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+
     if request.method == 'POST':
         contact_id = request.form.get('user_id')
         phone = request.form.get('phone')
@@ -117,13 +121,17 @@ def add_new_phone():
 
 @app.route('/notes', methods=['GET', 'POST'], strict_slashes=False)
 def notes_main():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
     tags = db.session.query(NoteTag).filter(NoteTag.user_id == 1).all()  # for testing
     # notes = []
     # if 'username' in session:
     #     notes = db.session.query(Note).filter(User.id == session['username']['id']).all()
     notes = db.session.query(Note).filter(Note.user_id == 1).all()  # for testing
     if request.method == 'GET':
-        return render_template('pages/notes_main.html', notes=notes, tags=tags)
+        return render_template('pages/notes_main.html', notes=notes, tags=tags, auth=auth, user_name=user_name)
     if request.method == 'POST':
         filter_tag = request.form.get('filter_tag')
         search_text = request.form.get('search_text')
@@ -135,7 +143,7 @@ def notes_main():
             for note in notes:
                 if int(filter_tag) in [t.id for t in note.note_tags]:
                     notes_by_tag.append(note)
-            return render_template('pages/notes_main.html', notes=notes_by_tag, tags=tags)
+            return render_template('pages/notes_main.html', notes=notes_by_tag, tags=tags, auth=auth, user_name=user_name)
         # if search_text: #not working
         #     notes_by_search = []
         #     for note in notes:
@@ -150,8 +158,9 @@ def notes_main():
 @app.route('/notes/tags', methods=['GET', 'POST'], strict_slashes=False)
 def add_tags():
     auth = True if 'username' in session else False
-    # if not auth:
-    #     return redirect(request.url)
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
     if request.method == 'POST':
         tag_name = request.form.get('tag_name')
         #add condition to check if the tag is already in the database for this user
@@ -165,14 +174,15 @@ def add_tags():
     # if 'username' in session:
     #     tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
     tags = db.session.query(NoteTag).filter(NoteTag.user_id == 1).all()  # for testing
-    return render_template('pages/tags.html', tags=tags)
+    return render_template('pages/tags.html', tags=tags, auth=auth, user_name=user_name)
 
 
 @app.route('/notes/add', methods=['GET', 'POST'], strict_slashes=False)
 def add_notes():
     auth = True if 'username' in session else False
-    # if not auth:
-    #     return redirect(request.url)
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
 
     # tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
 
@@ -196,15 +206,14 @@ def add_notes():
     # if 'username' in session:
     #     tags = db.session.query(NoteTag).filter(User.id == session['username']['id']).all()
     tags = db.session.query(NoteTag).filter(NoteTag.user_id == 1).all() #for testing
-    return render_template('pages/notes_add.html', tags=tags)
-
+    return render_template('pages/notes_add.html', tags=tags, auth=auth, user_name=user_name)
 
 
 @app.route('/notes/delete/<note_id>', methods=['POST'], strict_slashes=False)
 def note_delete(note_id):
     auth = True if 'username' in session else False
-    # if not auth:
-    #     return redirect(request.url)
+    if not auth:
+        return redirect(request.url)
     if request.method == 'POST':
         # db.session.query(Note).filter(Note.user_id == session['username']['id'], Note.id == note_id).delete()
         db.session.query(Note).filter(Note.user_id == 1, Note.id == note_id).delete()
@@ -272,7 +281,7 @@ def sign_in():
 def logout():
     auth = True if 'username' in session else False
     if not auth:
-        return redirect(url_for('index'))               #request.url)  # Відправляє туди звідки він прийшов
+        return redirect(url_for('index'))
     session.pop('username')
     response = make_response(redirect(url_for('index')))
     response.set_cookie('username', '', expires=-1)

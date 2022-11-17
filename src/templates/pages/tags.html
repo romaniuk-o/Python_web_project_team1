@@ -1,25 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-  <h1>Add new tag:</h1>
-      <form method="POST">
-        <div style="padding: 10px">
-          <label
-            >New tag:
-            <input type="text" name="tag_name" required />
-          </label>
+<main class="container">
+    <div class="container">
+      <h1>Add new tag:</h1>
+          <form method="POST">
+            <div style="padding: 10px">
+              <label
+                >New tag:
+                <input type="text" name="tag_name" required />
+              </label>
+            </div>
+            <div class="grid">
+              <button type="submit">Add</button>
+              <button type="reset" class="secondary">Reset</button>
+            </div>
+        </form>
+        <div >
+          <h1>Existing tags:</h1>
+          <ul class="blocktext_tag">
+             {% for tag in tags %}
+             <li> {{tag.tag_name}}</li>
+             {% endfor %}
+         </ul>
         </div>
-        <div class="grid">
-          <button type="submit">Add</button>
-          <button type="reset" class="secondary">Reset</button>
-        </div>
-    </form>
-    <h1>Existing tags:</h1>
-      <ul name="note_tags">
-         {% for tag in tags %}
-         <li>{{tag.tag_name}}</li>
-         {% endfor %}
-     </ul>
-</div>
+    </div>
+</main>
 {% endblock %}
