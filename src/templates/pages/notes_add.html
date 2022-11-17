@@ -1,30 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-   <h1>Add new note:</h1>
-      <form method="POST">
-        <div style="padding: 10px">
-          <label
-            >New note:
-            <input type="text" name="note_text" required />
-          </label>
-          <div>
-           <fieldset>
-              <legend>Choose the tags:</legend>
+<main class="container">
+    <div class="container">
+       <h1>Add new note:</h1>
+          <form method="POST">
+            <div style="padding: 10px">
+              <label
+                >New note:
+                <input type="text" name="note_text" required />
+              </label>
               <div>
-                {% for tag in tags %}
-                <input type="checkbox" name="tags" value="{{tag.id}}">{{tag.tag_name}}</input>
-                {% endfor %}
-              </div>
-            </fieldset>
+               <fieldset>
+                  <legend>Choose the tags:</legend>
+                  <div>
+                    {% for tag in tags %}
+                    <input type="checkbox" name="tags" value="{{tag.id}}">{{tag.tag_name}}</input>
+                    {% endfor %}
+                  </div>
+                </fieldset>
 
-          </div>
-        </div>
-        <div class="grid">
-          <button type="submit">Add</button>
-          <button type="reset" class="secondary">Reset</button>
-        </div>
-    </form>
-</div>
+              </div>
+            </div>
+            <div class="grid">
+              <button type="submit">Add</button>
+              <button type="reset" class="secondary">Reset</button>
+            </div>
+        </form>
+    </div>
+</main>
 {% endblock %}
