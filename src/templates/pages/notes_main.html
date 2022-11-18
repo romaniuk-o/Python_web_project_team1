@@ -3,56 +3,48 @@
 {% block content %}
 <main class="container">
     <div class="container">
-      <h1>Search notes:</h1>
-      <form method="POST">
+        <h1>Search notes:</h1>
+        <form method="POST">
             <div style="padding: 10px">
-                <select name="filter_tag">
-                  <option label="Select tag:">Select tag:</option>
-                  {% for tag in tags %}
-                  <option value="{{tag.id}}">{{tag.tag_name}}</option>
-                  {% endfor %}
-              </select>
+                <div style="padding: 10px">
+                    <select name="filter_tag">
+                        <option label="Select tag:">Select tag:</option>
+                        {% for tag in tags %}
+                        <option value="{{tag.id}}">{{tag.tag_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <button name="btn" value="set_filter">Filter</button>
+                </div>
             </div>
-            <div class="grid">
-              <button type="submit">Filter</button>
-              <form action="/notes">
-                 <button type="submit">Clear filter</button>
-              </form>
-            </div>
-      </form>
-      <form method="POST">
             <div style="padding: 10px">
-              <label
-                >Search in text/ tag:
-                <input type="text" name="search_text"/>
-              </label>
+                <label>Search in text/ tag:
+                    <input type="text" name="search_text"/>
+                </label>
+                <button name="btn" value="search">Search</button>
             </div>
-            <div class="grid">
-              <button type="submit">Search</button>
-              <button type="button" class="secondary">Reset</button>
+            <div style="padding: 10px">
+                <button name="btn" value="clear_filter">Clear filter/ search</button>
             </div>
         </form>
-      <h1>All notes:</h1>
-      <div>
-        <ul class="blocktext" name="notes">
-            {% for note in notes %}
-            <li value="{{note.id}}">{{note.note_text}}
-                {% if note.note_tags != [] %}
+        <h1 style="margin-top: 10px">Notes:</h1>
+        <div>
+            <ul class="blocktext" name="notes">
+                {% for note in notes %}
+                <li value="{{note.id}}">{{note.note_text}}
+                    {% if note.note_tags != [] %}
                     <br> Tags:
                     {% for tag in note.note_tags %}
                     {{tag.tag_name}}
                     {% endfor %}
-                {% endif %}
-                <form action="/notes/delete/{{note.id}}" method="post">
-                    <button class="btn btn-sm btn-outline-secondary">
-                    Delete
-                    </button>
-                </form>
-            </li>
-            <hr style="border-width: 3px;">
-            {% endfor %}
-        </ul>
-      </div>
+                    {% endif %}
+                    <form action="/notes/delete/{{note.id}}" method="post">
+                        <button class="btn btn-sm btn-outline-secondary">Delete</button>
+                    </form>
+                </li>
+                <hr style="border-width: 3px;">
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 </main>
 
