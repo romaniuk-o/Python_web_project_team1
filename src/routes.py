@@ -1,5 +1,7 @@
+import os.path
+
 from _sqlite3 import IntegrityError
-from flask import render_template, request, flash, redirect, url_for, session, make_response
+from flask import render_template, request, flash, redirect, url_for, session, make_response, send_from_directory
 from werkzeug.utils import secure_filename
 import pathlib
 import uuid
@@ -11,6 +13,7 @@ from src.libs.validation_file import phone_valid
 from src.repository import contact_methods, regist
 from src.libs.validation_schemas import NewContactSchema
 from src.libs.validation_schemas import RegistrationSchema, LoginSchema
+from src.repository.files import allowed_file
 
 
 from src import db
@@ -286,4 +289,42 @@ def logout():
 
     return response
 
+@app.route('/files/upload', methods=['GET', 'POST'], strict_slashes=False)
+def upload_file():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
 
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            save_path = pathlib.Path(app.config['UPLOAD_FOLDER']) / user_name
+            save_path.mkdir(exist_ok=True, parents=True)
+            file.save(save_path / filename)
+            flash('File uploaded successfully')
+            return redirect(url_for('index'))
+    return render_template('pages/upload.html', auth=auth)
+
+@app.route('/uploads/<filename>')
+def upload(filename):
+    user_name = session['username']['username']
+    return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], user_name), filename)
+
+@app.route('/files', methods=['GET'], strict_slashes=False)
+def files_list():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+
+    user_name = session['username']['username']
+    dir_path = pathlib.Path(app.config['UPLOAD_FOLDER']) / user_name
+    files = os.listdir(dir_path)
+    return render_template('pages/files.html', files=files, auth=auth)
