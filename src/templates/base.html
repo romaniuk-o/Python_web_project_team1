@@ -67,7 +67,21 @@
             <span class="navbar-toggler-icon"></span>
          </button>
       </nav>
+
+      <div class="container" style="padding 50px">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+      </div>
+
     <main class="template" role="main">
+
       {% block content %}
       {% endblock %}
     </main>
@@ -85,8 +99,8 @@
             </ul>
             <h3 class="sidebar-title">Notebook</h3>
               <ul class="book-list">
+                <li class="side_bar_item"><a class="side-bar-item-link" href="/notes">All notes</a></li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/notes/add">Add new note</a></li>
-                <li class="side_bar_item"><a class="side-bar-item-link" href="/notes">Show all notes</a></li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/notes/tags">Add and review tags</a></li>
               </ul>
             <h3 class="sidebar-title">Your files</h3>
