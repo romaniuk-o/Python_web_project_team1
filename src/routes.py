@@ -1,20 +1,23 @@
 from _sqlite3 import IntegrityError
 from flask import render_template, request, flash, redirect, url_for, session, make_response
 from werkzeug.utils import secure_filename
+
 import pathlib
 import uuid
 from datetime import datetime, timedelta
 from marshmallow import ValidationError
-
 from . import app
 from src.libs.validation_file import phone_valid
 from src.repository import contact_methods, regist
 from src.libs.validation_schemas import NewContactSchema
 from src.libs.validation_schemas import RegistrationSchema, LoginSchema
-
-
 from src import db
 from .models import Note, NoteTag, User
+
+
+
+
+
 
 
 @app.route('/healthcheck')
@@ -31,6 +34,7 @@ def index():
     else:
         user_name = ''
     return render_template('pages/index.html', title='Final project, TEAM 1', auth=auth, user_name=user_name)
+
 
 
 @app.route('/new_contact', methods=['GET', 'POST'], strict_slashes=False)

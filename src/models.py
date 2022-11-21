@@ -61,3 +61,42 @@ class Note(db.Model):
             return f'Tags: {[t.tag_name for t in self.note_tags]}\n{self.note_text}'
         return f'{self.note_text}'
 
+
+
+class News(db.Model):
+    __tablename__ = 'news'
+    id = db.Column(db.Integer, primary_key=True)
+    news1 = db.Column(db.String(250), nullable=False)
+    news2 = db.Column(db.String(250), nullable=False)
+    news3 = db.Column(db.String(250), nullable=False)
+    link1 = db.Column(db.String(250), nullable=False)
+    link2 = db.Column(db.String(250), nullable=False)
+    link3 = db.Column(db.String(250), nullable=False)
+
+
+class Sport(db.Model):
+    __tablename__ = 'sport'
+    id = db.Column(db.Integer, primary_key=True)
+    sport1 = db.Column(db.String(250), nullable=False)
+    sport2 = db.Column(db.String(250), nullable=False)
+    sport3 = db.Column(db.String(250), nullable=False)
+    s_link1 = db.Column(db.String(250), nullable=False)
+    s_link2 = db.Column(db.String(250), nullable=False)
+    s_link3 = db.Column(db.String(250), nullable=False)
+
+
+class Valute(db.Model):
+    __tablename__ = 'valute'
+    id = db.Column(db.Integer, primary_key=True)
+    bank1_eur = db.Column(db.String(250), nullable=False)
+    bank1_usd = db.Column(db.String(250), nullable=False)
+    bank2_usd = db.Column(db.String(250), nullable=False)
+    bank2_eur = db.Column(db.String(250), nullable=False)
+
+
+class Weather(db.Model):
+    __tablename__ = 'weather'
+    id = db.Column(db.Integer, primary_key=True)
+    gis1 = db.Column(db.String(250), nullable=False)
+    gis2 = db.Column(db.String(250), nullable=False)
+    gis3 = db.Column(db.String(250), nullable=False)
