@@ -3,15 +3,21 @@
 
 {% block content %}
 {% if auth %}
-
+  {% if files %}
   <ul class="container">
     {% for file in files %}
-
     <li>
-      <i class="fa fa-file" style="font-size:24px"></i>
-      <a href="{{ url_for('upload', filename=file) }}">{{ file }}</a>
+      <div>
+        <a href="{{ url_for('upload', filename=file) }}">{{ file }}</a>
+        <form method="post" action="{{ url_for('delete', filename=file) }}">
+          <input type="submit" value="Delete" name="Delete">
+        </form>
+      </div>
     </li>
-{% endfor %}
+    {% endfor %}
   </ul>
+  {% else %}
+  <a class="container">Nothing downloaded</a>
+  {% endif %}
 {% endif %}
 {% endblock content %}

@@ -10,5 +10,5 @@ class Config:
     UPLOAD_FOLDER = str(FILE_FOLDER)
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(BASE_DIR / 'data' / 'Python_web_team1.sqlite3')
     SECRET_KEY = config['SECRET_KEY']
-    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx'}
     MAX_CONTENT_LENGTH = 16 * 1000 * 1000

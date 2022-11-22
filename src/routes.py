@@ -311,20 +311,28 @@ def upload_file():
             file.save(save_path / filename)
             flash('File uploaded successfully')
             return redirect(url_for('index'))
-    return render_template('pages/upload.html', auth=auth)
+    return render_template('pages/upload.html', auth=auth, user_name=user_name)
 
 @app.route('/uploads/<filename>')
 def upload(filename):
     user_name = session['username']['username']
     return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], user_name), filename)
 
-@app.route('/files', methods=['GET'], strict_slashes=False)
+@app.route('/files', methods=['GET', 'POST'], strict_slashes=False)
 def files_list():
     auth = True if 'username' in session else False
     if not auth:
         return redirect(request.url)
-
     user_name = session['username']['username']
     dir_path = pathlib.Path(app.config['UPLOAD_FOLDER']) / user_name
+    dir_path.mkdir(exist_ok=True, parents=True)
     files = os.listdir(dir_path)
-    return render_template('pages/files.html', files=files, auth=auth)
+    return render_template('pages/files.html', files=files, auth=auth, user_name=user_name)
+
+@app.route('/delete/<filename>', methods=['POST'])
+def delete(filename):
+    user_name = session['username']['username']
+    file_path = pathlib.Path(app.config['UPLOAD_FOLDER']) / user_name / filename
+    if file_path.exists():
+        file_path.unlink()
+    return redirect(url_for('files_list'))
