@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-info">{{message}}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <h1>Address book</h1>
+        {% for c in contacts %}
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-6">Name:</div>
+            <div class="col-6">{{ c.user_name }}</div>
+          </div>
+          <div class="row">
+            <div class="col">Phone(s)</div>
+            <div class="col">
+              {% for p in phones%}
+                {% if p.contact_id == c.id%}
+                  {{ p.phone }}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">Address</div>
+            <div class="col">{{ c.address }}</div>
+          </div><div class="row">
+            <div class="col">Email</div>
+            <div class="col">{{ c.email }}</div>
+          </div>
+          <div class="row">
+            <div class="col">Birthday</div>
+            <div class="col">{{ c.birthday }}</div>
+          </div>
+            <div class="card-body">
+              <div class="grid">
+                  <div class="btn-group mr-2" role="group" aria-label="First group">
+                  <a class="btn btn-sm btn-outline-secondary" href="/show_address_book/add_new_phone/{{c.id}}">
+                    Add phone number </a>
+                  </div>
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                  <a class="btn btn-sm btn-outline-secondary" href="/show_address_book/edit/{{c.id}}">
+                              Edit        </a>
+                  <a>
+                    </div>
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                  <form action="/show_address_book/delete/{{c.id}}" method="GET">
+                    <button class="btn btn-sm btn-outline-secondary">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+
+             </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+{% endblock %}

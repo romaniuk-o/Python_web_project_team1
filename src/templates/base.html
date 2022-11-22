@@ -67,9 +67,22 @@
             <span class="navbar-toggler-icon"></span>
          </button>
       </nav>
+
+
+
     <main class="template" role="main">
-      {% block content %}
-      {% endblock %}
+      <div class="container" style="padding 50px">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-info"> {{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+      </div>
     </main>
     <!--Sidebar section-->
     {% if auth %}
@@ -81,18 +94,17 @@
                 <li class="side_bar_item"> <a class="side-bar-item-link" href="/new_contact">Add new contact </a> </li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/show_address_book">Show address book </a></li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/find_address_book">Find in address book </a></li>
-                <li class="side_bar_item"><a class="side-bar-item-link" href="/add_new_phone">Add new phone</a></li>
             </ul>
             <h3 class="sidebar-title">Notebook</h3>
               <ul class="book-list">
+                <li class="side_bar_item"><a class="side-bar-item-link" href="/notes">All notes</a></li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/notes/add">Add new note</a></li>
-                <li class="side_bar_item"><a class="side-bar-item-link" href="/notes">Show all notes</a></li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/notes/tags">Add and review tags</a></li>
               </ul>
             <h3 class="sidebar-title">Your files</h3>
               <ul class="book-list">
-                <li class="side_bar_item"><a class="side-bar-item-link" href=/pictures">Files</a></li>
-                <li class="side_bar_item"><a class="side-bar-item-link" href="/pictures/upload">Upload file</a></li>
+                <li class="side_bar_item"><a class="side-bar-item-link" href="/files">Files</a></li>
+                <li class="side_bar_item"><a class="side-bar-item-link" href="/files/upload">Upload file</a></li>
               </ul>
             </ul>
         </div>
