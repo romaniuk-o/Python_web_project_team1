@@ -68,22 +68,21 @@
          </button>
       </nav>
 
-      <div class="container" style="padding 50px">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-      </div>
+
 
     <main class="template" role="main">
+      <div class="container" style="padding 50px">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-info"> {{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-      {% block content %}
-      {% endblock %}
+        {% block content %}
+        {% endblock %}
+      </div>
     </main>
     <!--Sidebar section-->
     {% if auth %}
@@ -95,7 +94,6 @@
                 <li class="side_bar_item"> <a class="side-bar-item-link" href="/new_contact">Add new contact </a> </li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/show_address_book">Show address book </a></li>
                 <li class="side_bar_item"><a class="side-bar-item-link" href="/find_address_book">Find in address book </a></li>
-                <li class="side_bar_item"><a class="side-bar-item-link" href="/add_new_phone">Add new phone</a></li>
             </ul>
             <h3 class="sidebar-title">Notebook</h3>
               <ul class="book-list">

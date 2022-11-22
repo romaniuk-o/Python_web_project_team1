@@ -1,6 +1,5 @@
 import os.path
-
-from _sqlite3 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 from flask import render_template, request, flash, redirect, url_for, session, make_response, send_from_directory
 from werkzeug.utils import secure_filename
 import pathlib
@@ -18,6 +17,18 @@ from src.repository.files import allowed_file
 
 from src import db
 from .models import Note, NoteTag, User
+
+
+
+@app.before_request
+def before_func():
+    auth = True if 'username' in session else False
+    if not auth:
+        token_user = request.cookies.get('username')
+        if token_user:
+            user = regist.get_user_by_token(token_user)
+            if user:
+                session['username'] = {"username": user.username, "id": user.id}
 
 
 @app.route('/healthcheck')
@@ -38,11 +49,16 @@ def index():
 
 @app.route('/new_contact', methods=['GET', 'POST'], strict_slashes=False)
 def new_contact():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
+    user_id = session['username']['id']
     if request.method == 'POST':
         try:
             NewContactSchema().load(request.form)
         except ValidationError as err:
-            return render_template('pages/new_contact.html', messages=err.messages)
+            return render_template('pages/new_contact.html', messages=err.messages, user_name=user_name, auth=auth)
         name = request.form.get('name')
         phone = request.form.get('phone')
         birthday = request.form.get('birthday')
@@ -51,23 +67,35 @@ def new_contact():
         if phone_valid(phone) is None:
             flash(f'Phone number is incorrect\n'
                   f'Phone number must be 12 digits, and start with 380')
-            return render_template('pages/new_contact.html')
-        contact_methods.add_new_contact(name, phone_valid(phone), birthday, address, email)
-
+            return render_template('pages/new_contact.html', user_name=user_name, auth=auth)
+        try:
+            print(contact_methods.add_new_contact(name, phone_valid(phone), birthday, address, email, user_id))
+        except IntegrityError as err:
+            print(f'this{err}')
+            flash('this email or phone number isn\'t unique')
+            return render_template('pages/new_contact.html', user_name=user_name, auth=auth)
         flash('added successfully')
-    return render_template('pages/new_contact.html')
+    return render_template('pages/new_contact.html', user_name=user_name, auth=auth)
 
 
 @app.route('/show_address_book', methods=['GET', 'POST'], strict_slashes=False)
 def show_address_book():
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
+    user_id = session['username']['id']
     if request.method == 'GET':
-        contacts = contact_methods.show_address_book()
-        phones = contact_methods.show_phones_for_contact()
-    return render_template('pages/show_address_book.html', contacts=contacts, phones=phones)
+        contacts = contact_methods.show_address_book(user_id)
+        phones = contact_methods.show_phones_for_contact(user_id)
+    return render_template('pages/show_address_book.html', contacts=contacts, phones=phones, user_name=user_name, auth=auth)
 
 
 @app.route('/show_address_book/delete/<c_id>', methods=['GET', 'POST'], strict_slashes=False)
 def delete_address_book(c_id):
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
     if request.method == 'GET':
         contact_methods.delete_contact(c_id)
         contact_methods.delete_contact_phones(c_id)
@@ -77,49 +105,75 @@ def delete_address_book(c_id):
 
 @app.route('/show_address_book/edit/<c_id>', methods=['GET', 'POST'], strict_slashes=False)
 def edit_address_book(c_id):
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
     contact = contact_methods.get_contact(c_id)
     phones = contact_methods.get_contacts_phones(c_id)
     if request.method == 'POST':
+        try:
+            NewContactSchema().load(request.form)
+        except ValidationError as err:
+            flash(f'{err}')
+            return render_template('pages/edit_address_book.html', contact=contact, phones=phones, user_name=user_name, auth=auth, messages=err.messages)
         name = request.form.get('name')
         birthday = request.form.get('birthday')
         address = request.form.get('address')
         email = request.form.get('email')
-        contact_methods.edit_contact(c_id, name, birthday, address, email)
-        flash('Changed successfully!')
-        return redirect(url_for('result_address_book'))
-    return render_template('pages/edit_address_book.html', contact=contact, phones=phones)
+        phones = request.form.getlist('phone')
+        for p in phones:
+            if phone_valid(p) != None :
+                contact_methods.edit_contact(c_id, name, birthday, address, email)
+                contact_methods.edit_phones(c_id, phones)
+                flash('Changed successfully!')
+            else:
+                flash('Incorrect phone number!')
+                return redirect(request.url)
+            return redirect(url_for('show_address_book'))
+    return render_template('pages/edit_address_book.html', contact=contact, phones=phones, user_name=user_name, auth=auth)
 
 
 @app.route('/find_address_book', methods=['GET', 'POST'], strict_slashes=False)
 def find_address_book():
-    if request.method == 'POST':
-        symbol = request.form.get('symbol')
-        contact = contact_methods.find_notate(symbol)
-        return render_template('pages/result_address_book.html', contact=contact)
-    return render_template('pages/find_address_book.html')
-
-
-@app.route('/add_new_phone', methods=['GET', 'POST'], strict_slashes=False)
-def add_new_phone():
     auth = True if 'username' in session else False
     if not auth:
         return redirect(request.url)
-
+    user_name = session['username']['username']
+    user_id = session['username']['id']
     if request.method == 'POST':
-        contact_id = request.form.get('user_id')
+        symbol = request.form.get('symbol')
+        contacts, phones = contact_methods.find_address_book(symbol, user_id)
+        print(contacts, phones)
+        return render_template('pages/result_address_book.html', contacts=contacts,
+                               phones=phones, user_name=user_name, auth=auth, user_id=user_id)
+    return render_template('pages/find_address_book.html', user_name=user_name, auth=auth)
+
+
+@app.route('/show_address_book/add_new_phone/<c_id>', methods=['GET', 'POST'], strict_slashes=False)
+def add_new_phone(c_id):
+    print(f'first {c_id}')
+    auth = True if 'username' in session else False
+    if not auth:
+        return redirect(request.url)
+    user_name = session['username']['username']
+    user_id = session['username']['id']
+    if request.method == 'POST':
+        print(c_id)
         phone = request.form.get('phone')
         if phone_valid(phone) is None:
             flash(f'Phone number is incorect\n'
                   f'Phone number must be 12 digits, and start with 380')
-            return render_template('pages/add_new_phone.html')
+            return redirect(url_for('show_address_book'))
         try:
-            contact_methods.add_new_phone(contact_id, phone)
+            contact_methods.add_new_phone(c_id, phone, user_id)
         except ValueError:
             flash('Phone already exist')
-            return render_template('pages/add_new_phone.html')
-
+            return redirect(request.url)
         flash('added successfully')
-    return render_template('pages/add_new_phone.html')
+        return redirect(url_for('show_address_book'))
+
+    return render_template('pages/add_new_phone.html', user_name=user_name, auth=auth, cont_id=c_id)
 
 
 @app.route('/notes', methods=['GET', 'POST'], strict_slashes=False)
@@ -238,7 +292,6 @@ def registration():
         nick = request.form.get('nickname')
         print(email, password, nick)
         user = regist.create_user(email, password, nick)
-        print(user)
         return redirect(url_for('sign_in'))
     if auth:
         return redirect(url_for('index'))
