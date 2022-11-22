@@ -11,7 +11,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     hash = db.Column(db.String(255), nullable=False)
     token_cookie = db.Column(db.String(255), nullable=True, default=None)
-    #pictures = relationship('Picture', back_populates='user')
+
 
     def __repr__(self):
         return f"User({self.id}, {self.username}, {self.email})"
@@ -22,17 +22,20 @@ class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(120), nullable=False)
     birthday = db.Column(db.String(100), nullable=True)
-    email = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(100), nullable=True, unique=True)
     address = db.Column(db.String(100), nullable=True)
     phones = db.relationship('PhoneToContact', back_populates='contact')
+    user_id = db.Column(db.ForeignKey('users.id', ondelete='CASCADE'))
 
 
 class PhoneToContact(db.Model):
     __tablename__ = 'phones'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    phone = db.Column(db.String(100))
+    phone = db.Column(db.String(100), unique=True)
     contact_id = db.Column(ForeignKey('contacts.id', ondelete='CASCADE'), nullable=False)
     contact = db. relationship('Contact', back_populates='phones')
+    user_id = db.Column(db.ForeignKey('users.id', ondelete='CASCADE'))
+
 
 
 association_table = db.Table("association_table", db.Model.metadata,

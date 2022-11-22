@@ -10,3 +10,5 @@ config/__pycache__
 src/libs/__pycache__
 src/static/__pycache__
 src/templates/__pycache__
+Pipfile
+Pipfile.lock
