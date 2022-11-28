@@ -3,13 +3,7 @@
 {% block content %}
 
     <div class="container">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-info">{{message}}</div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+
       <h1>Address book</h1>
         {% for c in contacts %}
         <div class="container text-center">
