@@ -1,13 +1,12 @@
 import os.path
 from threading import Thread
-
 from sqlalchemy.exc import IntegrityError
 from flask import render_template, request, flash, redirect, url_for, session, make_response, send_from_directory
 from werkzeug.utils import secure_filename
-
 import pathlib
 import uuid
-from datetime import datetime, timedelta, time
+import time
+from datetime import datetime, timedelta
 from marshmallow import ValidationError
 from . import app
 from src.libs.validation_file import phone_valid
@@ -21,6 +20,16 @@ from scraping.scraping import scraping
 
 
 
+
+@app.before_request
+def before_func():
+    auth = True if 'username' in session else False
+    if not auth:
+        token_user = request.cookies.get('username')
+        if token_user:
+            user = regist.get_user_by_token(token_user)
+            if user:
+                session['username'] = {"username": user.username, "id": user.id}
 
 @app.before_request
 def before_func():
@@ -394,23 +403,14 @@ def delete(filename):
         file_path.unlink()
     return redirect(url_for('files_list'))
 
-valute = {}
-news = {}
-sport = {}
-weather = {}
-
-def main_scrap():
-    while True:
-        global valute, news, sport, weather
-        valute, news, sport, weather = scraping()
-        time.sleep(600)
-
-Thread(target=main_scrap, args=()).start()
 @app.route('/news', strict_slashes=False)
 def news_scrapp():
+    valute, news, sport, weather = scraping()
     auth = True if 'username' in session else False
     if auth:
         user_name = session['username']['username']
     else:
         user_name = ''
     return render_template('pages/news.html', auth=auth, user_name=user_name, valute=valute, news=news, sport=sport, weather=weather)
+
+
