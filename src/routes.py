@@ -56,7 +56,7 @@ def index():
         user_name = session['username']['username']
     else:
         user_name = ''
-    return render_template('pages/index.html', title='Final project, TEAM 1', auth=auth, user_name=user_name)
+    return render_template('pages/index.html', title='Your virtual assistant', auth=auth, user_name=user_name)
 
 
 
