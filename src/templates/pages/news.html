@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+      <h1>Sport</h1>
+        <div class="container text-center">
+          <div class="row">
+            <a class="btn btn-default" href="{{sport.foot1_href}}"
+              >🚵‍♀️ {{sport.foot1}}</a
+            >
+            <a class="btn btn-default" href="{{sport.foot2_href}}"
+              >🚵‍♀️ {{sport.foot2}}</a
+            >
+            <a class="btn btn-default" href="{{sport.foot3_href}}"
+              >🚵‍♀️ {{sport.foot3}}</a
+            >
+          </div>
+        </div>
+      <h1>News</h1>
+        <div class="container text-center">
+          <div class="row">
+            <a class="btn btn-default" href="{{news.korr1_href}}"
+              >📺 {{news.korr1}}</a
+            >
+            <a class="btn btn-default" href="{{news.korr2_href}}"
+              >📺 {{news.korr2}}</a
+            >
+            <a class="btn btn-default" href="{{news.bbc1_href}}"
+              >📺 {{news.bbc1}}</a
+            >
+          </div>
+        </div>
+      <h1>Weather</h1>
+        <div class="container text-center">
+          <div class="row">
+            <a class="btn btn-default" href="https://www.gismeteo.ua/weather-kyiv-4944/now/"
+              >🌤 {{weather.gis1}}</a
+            >
+            <a class="btn btn-default" href="https://www.gismeteo.ua/weather-washington-7150/now/"
+              >🌤 {{weather.gis2}}</a
+            >
+            <a class="btn btn-default" href="https://www.gismeteo.ua/weather-london-744/now/"
+              >🌤 {{weather.gis3}}</a
+            >
+          </div>
+        </div>
+      <h1>Valute</h1>
+        <div class="container text-center">
+          <div class="row">
+            <a class="btn btn-default" href="https://privatbank.ua/ru/rates-archive"
+              >💵 {{valute.bank1_usd}}</a
+            >
+            <a class="btn btn-default" href="https://bank.gov.ua/ua/markets/exchangerates"
+              >💵 {{valute.bank2_usd}}</a
+            >
+            <a class="btn btn-default" href="https://privatbank.ua/ru/rates-archive"
+              >💵 {{valute.bank1_eur}}</a
+            >
+            <a class="btn btn-default" href="https://bank.gov.ua/ua/markets/exchangerates"
+              >💵 {{valute.bank2_eur}}</a
+            >
+          </div>
+        </div>
+
+        </div>
+    </div>
+{% endblock %}
