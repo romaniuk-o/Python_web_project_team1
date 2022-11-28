@@ -3,21 +3,38 @@
 
 {% block content %}
 {% if auth %}
-  {% if files %}
-  <ul class="container">
-    {% for file in files %}
-    <li>
-      <div>
-        <a href="{{ url_for('upload', filename=file) }}">{{ file }}</a>
-        <form method="post" action="{{ url_for('delete', filename=file) }}">
-          <input type="submit" value="Delete" name="Delete">
+<main class="container">
+    <div class="container">
+        <h1>Choose filetype: </h1>
+        <form method="POST">
+            <div style="padding: 10px">
+                <div style="padding: 10px">
+                    <select name="filter_type">
+                        <option label="Select type:">Select filetype:</option>
+                        {% for type in filetype %}
+                        <option value="{{type}}">{{type}}</option>
+                        {% endfor %}
+                    </select>
+                    <button name="btn" value="set_filter">Filter</button>
+                </div>
+            </div>
         </form>
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <a class="container">Nothing downloaded</a>
-  {% endif %}
+        {% if files %}
+            <h1 style="margin-top: 10px">Files:</h1>
+                <ul class="blocktext" name="files">
+                    {% for file in files %}
+                    <li>
+                    <div>
+                        <a href="{{ url_for('upload', filename=file) }}">{{ file }}</a>
+                        <form method="post" action="{{ url_for('delete', filename=file) }}">
+                          <input type="submit" value="Delete" name="Delete">
+                        </form>
+                    </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+        {% endif %}
+    </div>
+</main>
 {% endif %}
 {% endblock content %}
