@@ -2,10 +2,7 @@ from requests import Session
 import configparser
 from bs4 import BeautifulSoup
 import os
-from src import models
-from sqlalchemy.orm import sessionmaker
-from src.models import News, Sport, Weather, Valute
-from src import db
+
 
 
 def scraping():
@@ -187,15 +184,14 @@ def scraping():
     get_data_web11(url11)
     return valute, news, sport, weather
 
-
 if __name__ == "__main__":
     v, n, s, w = scraping()
-    scrap_valute = models.Valute(bank1_eur=v.get['bank1_eur'], bank1_usd=v.get['bank1_usd'], bank2_usd=v.get['bank2_usd'], bank2_eur=v.get['bank2_eur'])
-    scrap_news = models.News(news1=n.get['korr1'], news2=n.get['korr2'], news3=n.get['korr3'], link1=n.get['korr1_href'], link2=n.get['korr2_href'], link3=n.get['korr3_href'])
-    scrap_sport = models.Sport(sport1=s.get['foot1'], sport2=s.get['foot2'], sport3=s.get['foot3'], s_link1=s.get['foot1_href'], s_link2=s.get['foot2_href'], s_link3=s.get['foot3_href'])
-    scrap_weather = models.Weather(gis1=w.get['gis1'], gis2=w.get['gis2'], gis3=w.get['gis3'])
-    db.session.add(scrap_news)
-    db.session.add(scrap_weather)
-    db.session.add(scrap_sport)
-    db.session.add(scrap_valute)
-    db.session.commit()
+    #scrap_valute = models.Valute(bank1_eur=v.get['bank1_eur'], bank1_usd=v.get['bank1_usd'], bank2_usd=v.get['bank2_usd'], bank2_eur=v.get['bank2_eur'])
+    #scrap_news = models.News(news1=n.get['korr1'], news2=n.get['korr2'], news3=n.get['korr3'], link1=n.get['korr1_href'], link2=n.get['korr2_href'], link3=n.get['korr3_href'])
+    #scrap_sport = models.Sport(sport1=s.get['foot1'], sport2=s.get['foot2'], sport3=s.get['foot3'], s_link1=s.get['foot1_href'], s_link2=s.get['foot2_href'], s_link3=s.get['foot3_href'])
+    #scrap_weather = models.Weather(gis1=w.get['gis1'], gis2=w.get['gis2'], gis3=w.get['gis3'])
+    #db.session.add(scrap_news)
+    #db.session.add(scrap_weather)
+    #db.session.add(scrap_sport)
+    #db.session.add(scrap_valute)
+    #db.session.commit()

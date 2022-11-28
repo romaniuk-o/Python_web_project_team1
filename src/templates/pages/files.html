@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% block content %}
+{% if auth %}
+  {% if files %}
+  <ul class="container">
+    {% for file in files %}
+    <li>
+      <div>
+        <a href="{{ url_for('upload', filename=file) }}">{{ file }}</a>
+        <form method="post" action="{{ url_for('delete', filename=file) }}">
+          <input type="submit" value="Delete" name="Delete">
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <a class="container">Nothing downloaded</a>
+  {% endif %}
+{% endif %}
+{% endblock content %}
