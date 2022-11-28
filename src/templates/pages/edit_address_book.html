@@ -6,13 +6,7 @@
       <h1>Edit data from address book</h1>
 
     </div>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-           <div class="alert alert-info">{{message}}: {{messages[message]}}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+
     <div class="row justify-content-center">
       <form class="col-sm-6" action="/show_address_book/edit/{{contact.id}}" method="post">
         <div class="form-group">

@@ -45,7 +45,7 @@ def before_func():
 
 @app.route('/healthcheck')
 def healthcheck():
-    return 'I am a finally project, team 1'
+    return 'Your virtual assistant.'
 
 
 
