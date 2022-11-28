@@ -365,7 +365,7 @@ def upload_file():
             save_path.mkdir(exist_ok=True, parents=True)
             file.save(save_path / filename)
             flash('File uploaded successfully')
-            return redirect(url_for('index'))
+            return redirect(url_for('upload_file'))
     return render_template('pages/upload.html', auth=auth, user_name=user_name)
 
 @app.route('/uploads/<filename>')
@@ -379,10 +379,15 @@ def files_list():
     if not auth:
         return redirect(request.url)
     user_name = session['username']['username']
-    dir_path = pathlib.Path(app.config['UPLOAD_FOLDER']) / user_name
-    dir_path.mkdir(exist_ok=True, parents=True)
-    files = os.listdir(dir_path)
-    return render_template('pages/files.html', files=files, auth=auth, user_name=user_name)
+    if request.method == 'POST':
+        type_file = request.form.get('filter_type')
+        dir_path = pathlib.Path(app.config['UPLOAD_FOLDER']) / user_name
+        dir_path.mkdir(exist_ok=True, parents=True)
+        files = []
+        for file in dir_path.glob(f'*.{type_file}'):
+            files.append(file.name)
+        return render_template('pages/files.html', files=files, filetype=app.config['ALLOWED_EXTENSIONS'], auth=auth, user_name=user_name)
+    return render_template('pages/files.html', filetype=app.config['ALLOWED_EXTENSIONS'], auth=auth, user_name=user_name)
 
 @app.route('/delete/<filename>', methods=['POST'])
 def delete(filename):
