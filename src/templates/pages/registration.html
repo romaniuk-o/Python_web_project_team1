@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="container_sign">
+  <form  action="/registration" method="post">
+    <img class="mb-4" src="{{ url_for('static', filename='registration.png') }}" alt="" width="722" height="203">
+    <h1 class="h3 mb-3 fw-normal">Registration</h1>
+
+    <div class="form-floating">
+       {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-danger">{{message}}: {{messages[message]}}</div>
+          {% endfor %}
+        {% endif %}
+      <input type="text" class="form-control" name="email" placeholder="name@example.com">
+      <label>Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" name="password" placeholder="password">
+      <label>Password</label>
+    </div>
+    <div class="form-floating">
+      <input type="text" class="form-control" name="nickname" placeholder="nickname">
+      <label>Nickname</label>
+    </div>
+
+    <button class="w-100 btn btn-lg btn-dark" type="submit">Registration</button>
+    <p class="mt-5 mb-3 text-muted">© 2022–2022</p>
+  </form>
+</main>
+
+{% endblock %}

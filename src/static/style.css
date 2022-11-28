@@ -1,0 +1,166 @@
+body {
+
+
+},
+
+
+.main-container {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 1000px;
+  background: #fff;
+  margin: 40px auto;
+  box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  width: 100%;
+  position: relative;
+  top: 50px;
+  left: 0px;
+  padding: 3rem 1.5rem;
+}
+
+.container_index {
+  position: relative;
+  top: 200px;
+  left: 0px;
+  padding: 3rem 1.5rem;
+}
+
+
+
+html {
+  padding: 10px 50px 50px;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+.note_tags{
+  display: table-row;
+  text-align: center;
+
+}
+
+ul.blocktext {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+}
+ul.blocktext_tag {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+}
+
+
+
+.container_sign{
+  position: inherit;
+  top: 100px;
+  width: 100%;
+  padding: 3rem 1.5rem;
+}
+
+user_name {
+  color: #ffffff;
+}
+
+a {
+  color: #00B7FF;
+}
+
+h1 {
+  color: #696969;
+}
+h4 {
+  color: #ffffff;
+}
+.template {
+  position: relative;
+  top: 50px;
+  left: 200px;
+
+  padding: 3rem 1.5rem;
+  text-align: center;
+  height: 1000px;
+  width: 1000px;
+}
+
+/*side-bar-section  */
+.side-bar-section {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #696969;
+    overflow-x: hidden;
+    padding-top: 80px;
+}
+
+
+.Tech-Skills-section {
+  margin: 50px 0 0 40px;
+}
+
+
+
+.sidebar-title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 27px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+/* tech-Skills-list */
+.book-list {
+  padding: 0 0 0 17px;
+}
+.side_bar_item {
+  color: #DCDCDC;
+}
+.side-bar-item-link {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  color: #fff;
+}
+
+/* Soft-Skills-section  */
+
+.Soft-Skills-section {
+  margin: 10px 0 0 40px;
+}
+
+.Soft-Skills-item {
+  color: #fb6d3a;
+}
+.Soft-Skills-item-text {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  color: white;
+}
+
+
+file {
+  align: center;
+  padding: 10px;
+  }
+
+
+p {
+ color:blue;
+ }
+

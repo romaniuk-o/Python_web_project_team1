@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center mb-3">
+      <h1>Edit data from address book</h1>
+
+    </div>
+
+    <div class="row justify-content-center">
+      <form class="col-sm-6" action="/show_address_book/edit/{{contact.id}}" method="post">
+        <div class="form-group">
+          <input
+            class="form-control col-sm-12"
+            type="text"
+            placeholder="name"
+            name="name"
+            value="{{contact.user_name}}"
+          />
+          <input
+            class="form-control col-sm-12"
+            type="text"
+            placeholder="birthday"
+            name="birthday"
+            value="{{contact.birthday}}"
+          />
+          <input
+            class="form-control col-sm-12"
+            type="text"
+            placeholder="address"
+            name="address"
+            value="{{contact.address}}"
+          />
+          <input
+            class="form-control col-sm-12"
+            type="text"
+            placeholder="email"
+            name="email"
+            value="{{contact.email}}"
+          />
+
+          {% for p in phones %}
+            <input
+            class="form-control col-sm-12"
+            type="text"
+            placeholder="phone"
+            name="phone"
+            value="{{p.phone}}"
+          />
+          {% endfor %}
+        </div>
+        <div class="form-group">
+          <div class="btn-group">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+              <a class="w-100 btn btn-lg btn-dark" href="/show_address_book" role="button">
+                back
+              </a>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button class="w-100 btn btn-lg btn-dark" type="submit">
+              Update
+            </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
